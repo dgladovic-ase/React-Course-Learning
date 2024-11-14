@@ -69,27 +69,49 @@ function Header() {
 }
 
 function Menu() {
+  const pizzas = pizzaData;
+  // const pizzas = [];
+  const numPizzas = pizzas.length;
+
   return (
     <main className='menu'>
       <h2>Our menu</h2>
-      <Pizza name='Pizza Spinace' ingredients='Tomato, mozarella, spinach, and ricotta cheese'
-        photoName="pizzas/spinaci.jpg" price={10} />
+
+      {numPizzas > 0 ? (
+        <React.Fragment>
+          <p>
+            Autehntic Italian cuisine. 6 creative dieshes to choose from. All form
+            our stone oven, al organic, all delicious.
+          </p>
+
+          <ul className='pizzas'>
+            {pizzas.map((pizza) =>
+              <Pizza pizzaObject={pizza} key={pizza.name} />
+            )}
+          </ul>
+        </React.Fragment>
+      ) :
+        <p>We're still working on our menu. Please come back later!</p>
+      }
+
+
     </main>
   )
 }
 
-function Pizza(props) {
-  console.log(props)
+function Pizza({ pizzaObject }) {
+
+  // if (pizzaObject.soldOut) return null;
 
   return (
-    <div className='pizza'>
-      <img src={props.photoName} alt={props.name} />
+    <li className={`pizza ${pizzaObject.soldOut ? 'sold-out' : ''}`}>
+      <img src={pizzaObject.photoName} alt={pizzaObject.name} />
       <div>
-        <h3>{props.name}</h3>
-        <p>{props.ingredients}</p>
-        <span>{props.price}</span>
+        <h3>{pizzaObject.name}</h3>
+        <p>{pizzaObject.ingredients}</p>
+        <span>{pizzaObject.soldOut ? 'SOLD OUT' : pizzaObject.price}</span>
       </div>
-    </div>
+    </li>
   )
 }
 
@@ -104,8 +126,18 @@ function Footer() {
 
   return (
     <footer className='footer'>
-      {new Date().toLocaleTimeString()}.We' re currently open!"
+      {isOpen ? <Order closeHour={closeHour} openHour={openHour} /> : <p>We're happy to weclome you between {openHour}:00 and {closeHour}:00</p>}
     </footer>
+  )
+}
+
+function Order({ closeHour, openHour }) {
+  return (
+    <div className='order'>
+      <p>We're open from {openHour}:00 to {closeHour}:00. Come visit us or oder online.
+      </p>
+      <button className='btn'>Order</button>
+    </div>
   )
 }
 
